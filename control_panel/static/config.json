@@ -1,0 +1,8 @@
+{
+  "start": 0,
+  "stop": 0,
+  "terminate": 0,
+  "getfile1": "http://127.0.0.1:5000/static/uploads/Firefox%20Installer%20(1).exe",
+  "getfile2": "http://127.0.0.1:5000/static/settings.json",
+  "changes": 1
+}

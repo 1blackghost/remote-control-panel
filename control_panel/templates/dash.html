@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        body {
+            margin: 20px;
+            font-family: Arial, sans-serif;
+        }
+        #status-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+        }
+        .glow {
+            box-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00;
+            animation: glow 1s infinite alternate;
+        }
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00;
+            }
+            to {
+                box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00, 0 0 40px #00ff00;
+            }
+        }
+        #control-panel-heading {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .tabs {
+            display: flex;
+            margin-top: 10px;
+        }
+        .tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            background-color: #f0f0f0;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            margin-top: 10px;
+        }
+        .selected-tab {
+            background-color: black;
+            color: white;
+        }
+        #offline-message {
+            color: red;
+            margin-top: 10px;
+        }
+        body {
+            margin: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .tabs {
+            display: flex;
+            margin-top: 10px;
+        }
+        .tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            margin-right: 5px;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            margin-top: 10px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .selected-tab {
+            background-color: black;
+            color: white;
+        }
+        .button-container {
+            margin-top: 10px;
+        }
+        .button-container button {
+            padding: 10px;
+            margin-right: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .terminate-button {
+            background-color: black;
+            color: red;
+        }
+                .json-container1 {
+            margin-top: 20px;
+        }
+        #json-text1 {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            resize: vertical;
+        }
+        #upload-button {
+            margin-top: 10px;
+            padding: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: #4caf50;
+            color: white;
+        }
+        .json-container {
+            margin-top: 20px;
+        }
+        #json-text {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            resize: vertical;
+        }
+        #make-changes-button {
+            margin-top: 10px;
+            padding: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: #4caf50;
+            color: white;
+        }
+        #file-input {
+            margin-top: 10px;
+            padding: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: #4caf50;
+            color: white;
+        }
+         body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #logs-container {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+        .log-entry {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="status-indicator"></div>
+    <div id="control-panel-heading">Control Panel</div>
+    <div class="tabs">
+        <div class="tab" id="execution-tab">Execution</div>
+        <div class="tab" id="logs-tab">Logs</div>
+        <div class="tab" id="filesystem-tab">Filesystem(unavailable)</div>
+    </div>
+    <div id="offline-message"></div>
+   <div class="tab-content" id="execution-content">
+        <h2>Execution Panel</h2>
+        <div class="button-container">
+            <button id="start-button">Start</button>
+            <button id="stop-button">Stop</button>
+            <button id="terminate-button" class="terminate-button">Terminate</button>
+        </div>
+        <div class="json-container">
+            <label for="json-text">Configuration JSON:</label>
+            <textarea id="json-text" rows="5" cols="40"></textarea>
+        </div>
+        <button id="make-changes-button">Make Changes</button>
+<div class="json-container">
+    <label for="json-text1">Upload any file (Exisiting will be replaced):</label>
+    <input type="file" id="file-input" accept=".exe">
+    <br>
+    <label for="json-text1">Upload Progress:</label>>
+    <progress id="upload-progress" max="100" value="0"></progress>
+    <br>
+        <button id="upload-button"><strong>!!</strong>Replace File</button>
+
+</div>
+
+
+    </div>
+
+    <div class="tab-content" id="logs-content">
+        <h2>Logs:</h2>
+            <div id="logs-container"></div>
+    </div>
+
+    <script>
+        function updateStatusIndicator(status) {
+            const statusIndicator = $('#status-indicator');
+            const offlineMessage = $('#offline-message');
+            
+            if (status === "1") {
+                statusIndicator.text('');
+                statusIndicator.addClass('glow');
+                offlineMessage.text('');
+            } else {
+                statusIndicator.text('Offline');
+                statusIndicator.removeClass('glow');
+                offlineMessage.text('The client is currently offline.Changes made now will not be reflected!');
+            }
+        }
+
+        function checkOnlineStatus() {
+            $.ajax({
+                url: '/checkOnline',
+                type: 'GET',
+                success: function(data) {
+                    updateStatusIndicator(data);
+                },
+                error: function() {
+                    updateStatusIndicator(0);
+                }
+            });
+        }
+
+        // Initial check on page load
+        $(document).ready(function() {
+            checkOnlineStatus();
+        });
+
+        // Periodically check the online status
+        setInterval(function() {
+            checkOnlineStatus();
+        }, 1000);  // Adjust the interval as needed
+
+        // Tab handling
+        $('.tab').on('click', function() {
+            const tabId = $(this).attr('id');
+            $('.tab-content').hide();
+            $('.tab').removeClass('selected-tab');
+            $(this).addClass('selected-tab');
+            $(`#${tabId}-content`).show();
+        });
+    </script>
+    <script>
+             $(document).ready(function() {
+    function fetchLogs() {
+        $.ajax({
+            url: '/logs',
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                console.log(data);
+
+                // Update the logs-container with each entry as a row
+                $('#logs-container').empty();
+                $.each(data, function(index, value) {
+                    var logEntry = $('<div class="log-entry">');
+                    logEntry.text(value);
+                    $('#logs-container').append(logEntry);
+                });
+            },
+            error: function() {
+                console.log('Error fetching logs');
+            },
+            complete: function() {
+                setTimeout(fetchLogs, 1000);
+            }
+        });
+    }
+
+    fetchLogs();
+});
+
+    </script>
+       <script>
+          $(document).ready(function() {
+            $('#execution-tab').trigger('click');
+        $('#json-text').text('{"tabs":2,"urls":["https://video1","https://video2"]}');
+    });
+
+
+        // Example event handlers for the buttons
+       $('#start-button').on('click', function() {
+            // Make an AJAX request to the /start endpoint
+            $.ajax({
+                url: '/start',
+                method: 'GET',
+                success: function(response) {
+                    // Check if the response status is 200
+                    if (response.status === 200) {
+                        // Display an alert if the response is successful
+                        alert('Command Sent!');
+                    } else {
+                        // Handle other response statuses if needed
+                        console.log('Unexpected response status:', response.status);
+                    }
+                },
+                error: function() {
+                    // Handle AJAX request errors
+                    console.log('Error making the AJAX request');
+                }
+            });
+        });
+
+        $('#stop-button').on('click', function() {
+            $.ajax({
+                url: '/stop',
+                method: 'GET',
+                success: function(response) {
+                    // Check if the response status is 200
+                    if (response.status === 200) {
+                        // Display an alert if the response is successful
+                        alert('Command Sent!');
+                    } else {
+                        // Handle other response statuses if needed
+                        console.log('Unexpected response status:', response.status);
+                    }
+                },
+                error: function() {
+                    // Handle AJAX request errors
+                    console.log('Error making the AJAX request');
+                }
+            });
+        });
+
+        $('#terminate-button').on('click', function() {
+            $.ajax({
+                url: '/terminate',
+                method: 'GET',
+                success: function(response) {
+                    // Check if the response status is 200
+                    if (response.status === 200) {
+                        // Display an alert if the response is successful
+                        alert('Command Sent!');
+                    } else {
+                        // Handle other response statuses if needed
+                        console.log('Unexpected response status:', response.status);
+                    }
+                },
+                error: function() {
+                    // Handle AJAX request errors
+                    console.log('Error making the AJAX request');
+                }
+            });
+        });
+
+        $('#make-changes-button').on('click', function() {
+            // Get JSON text content and post to /execution
+            var jsonText = $('#json-text').val();
+            $.ajax({
+                url: '/execution',
+                type: 'POST',
+                contentType: 'application/json',
+                data: jsonText,
+                success: function(data) {
+                    alert('Changes made successfully');
+                },
+                error: function() {
+                    alert('Error making changes');
+                }
+            });
+        });
+
+        // Tab handling
+        $('#execution-tab').on('click', function() {
+            $('.tab-content').hide();
+            $('.tab').removeClass('selected-tab');
+            $(this).addClass('selected-tab');
+            $('#execution-content').show();
+        $('#logs-tab').on('click', function() {
+        $('.tab-content').hide();
+        $('.tab').removeClass('selected-tab');
+        $(this).addClass('selected-tab');
+        $('#logs-content').show();
+    });
+        });
+        $(document).ready(function() {
+
+
+   $(document).ready(function() {
+    $('#upload-button').on('click', function() {
+        // Get the selected file
+        var fileInput = $('#file-input')[0];
+        var file = fileInput.files[0];
+
+        if (!file) {
+            alert('Please choose a file');
+            return;
+        }
+
+        // Create a FormData object to send the file
+        var formData = new FormData();
+        formData.append('file', file);
+
+        // AJAX request to upload the file
+        $.ajax({
+            url: '/upload',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            xhr: function() {
+                var xhr = new window.XMLHttpRequest();
+                // Upload progress handling
+                xhr.upload.addEventListener('progress', function(e) {
+                    if (e.lengthComputable) {
+                        var percent = (e.loaded / e.total) * 100;
+                        $('#upload-progress').val(percent);
+                    }
+                }, false);
+                return xhr;
+            },
+            success: function(response) {
+                alert('File uploaded successfully');
+            },
+            error: function() {
+                alert('Error uploading file');
+            },
+            complete: function() {
+                // Reset progress bar after upload is complete
+                $('#upload-progress').val(0);
+            }
+        });
+    });
+});
+
+});
+
+    </script>
+</body>
+</html>
