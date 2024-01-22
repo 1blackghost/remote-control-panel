@@ -11,10 +11,10 @@ config_path = 'static/config.json'
 def getc():
     with open(config_path, "r") as f:
         data = json.load(f)
-    
+
     # Reset specific keys to 0 using update_config_custom
     update_config_custom(start=0, stop=0, terminate=0, changes=0)
-    
+
     return jsonify(data)
 
 def update_config_custom(start=None, stop=None, terminate=None, getfile1=None, getfile2=None, changes=None):
@@ -75,7 +75,7 @@ def upload_file():
         return 'No selected file', 400
 
     # Specify the folder where you want to save the uploaded files
-    upload_folder = 'static/uploads'
+    upload_folder = '/home/ytauto/mysite/remote-control-panel/control_panel/static/uploads'
     file_path = f'{upload_folder}/{file.filename}'
 
     file.save(file_path)
@@ -101,7 +101,7 @@ def exe():
     try:
         json_data = request.get_json()
 
-        with open("static/settings.json", "w") as f:
+        with open("/home/ytauto/mysite/remote-control-panel/control_panel/static/settings.json", "w") as f:
             json.dump(json_data, f)
         file_url = url_for('static', filename=f'settings.json', _external=True)
         update_config_custom(getfile2=file_url,changes=1)
@@ -117,7 +117,13 @@ def pingdata(data):
         timestamp = datetime.now().timestamp()
         with open("static/online.txt", "w") as f:
             f.write(f"{data}:{timestamp}")
-        return "", 200
+        with open(config_path, "r") as f:
+            data = json.load(f)
+
+        # Reset specific keys to 0 using update_config_custom
+        update_config_custom(start=0, stop=0, terminate=0, changes=0)
+
+        return jsonify(data),200
     else:
         return "", 400
 
@@ -129,7 +135,7 @@ def check():
     try:
         with open("static/online.txt", "r") as f:
             content = f.read().strip().split(":")
-        
+
         if len(content) == 2:
             data, timestamp_str = content
             timestamp = float(timestamp_str)
